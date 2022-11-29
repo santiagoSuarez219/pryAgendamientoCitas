@@ -34,10 +34,10 @@ public class Cita {
     private LocalTime horaCita;
 
     @ManyToOne
-    @JoinColumn(name = "idUsuario")
+    @JoinColumn(name = "paciente")
     private Usuario paciente;
 
     @ManyToOne
-    @JoinColumn(name = "idUsuario")
+    @JoinColumn(name = "medico")
     private Usuario medico;
 }

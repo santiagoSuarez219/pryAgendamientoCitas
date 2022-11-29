@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-PryAgendamientoCitasApplication<pryAgendamientoCitas>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.misiontic.ciclo4.pryAgendamientoCitas.PryAgendamientoCitasApplication",
+            "projectName": "pryAgendamientoCitas",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

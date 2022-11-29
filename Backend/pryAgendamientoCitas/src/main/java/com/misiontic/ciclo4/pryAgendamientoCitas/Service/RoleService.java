@@ -1,6 +1,6 @@
 package com.misiontic.ciclo4.pryAgendamientoCitas.Service;
 
-// import java.util.List;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +15,9 @@ public class RoleService {
     @Autowired
     RoleRepository roleRepository;
 
-    // public List<Role> findAll(){
-    //     return (List<Role>) roleRepository.findAll();
-    // }
+    public List<Role> findAll(){
+        return (List<Role>) roleRepository.findAll();
+    }
 
     public Optional<Role> findByNombreRol(ERol nombre){
         return roleRepository.findByNombreRol(nombre);

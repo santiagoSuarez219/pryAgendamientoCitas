@@ -46,9 +46,13 @@ public class UsuarioController {
                         Role rolAdmin = roleService.findByNombreRol(ERol.ADMIN).get();
                         roles.add(rolAdmin);
                         break;
-                    case "Usuario":
-                        Role rolUser = roleService.findByNombreRol(ERol.USUARIO).get();
-                        roles.add(rolUser);
+                    case "Paciente":
+                        Role rolPaciente = roleService.findByNombreRol(ERol.PACIENTE).get();
+                        roles.add(rolPaciente);
+                        break;
+                    case "Medico":
+                        Role rolMedico = roleService.findByNombreRol(ERol.MEDICO).get();
+                        roles.add(rolMedico);
                         break;
                 }
             });

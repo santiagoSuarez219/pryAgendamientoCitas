@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +37,7 @@ public class UsuarioController {
     ConvertEntity convertEntity = new ConvertEntity();
 
     @PostMapping("/create")
-	public ResponseEntity<?> create(@RequestBody CrearUsuarioDto usuario, @RequestHeader String user, @RequestHeader String key){
+	public ResponseEntity<?> create(@RequestBody CrearUsuarioDto usuario){
 		Set<String> strRoles = usuario.getRoles();
         Set<Role> roles = new HashSet<>();
 
@@ -63,7 +64,6 @@ public class UsuarioController {
         }
         Usuario usuarioSave = (Usuario) convertEntity.convert(usuario, new Usuario());
         usuarioSave.setRoles(roles);
-        usuarioSave.setPassword(Hash.sha1(usuario.getPassword()));
         return new ResponseEntity<>(usuarioService.guardarUsuario(usuarioSave),HttpStatus.CREATED);
 	}
 
@@ -77,5 +77,14 @@ public class UsuarioController {
         } else {
             return new ResponseEntity<>(new Message(401, "Error de credenciales"), HttpStatus.UNAUTHORIZED);
         }
+    }
+    //Registrar Usuario
+    @PutMapping("/registro_usuario")
+    public ResponseEntity<Message> RegistrarUsuario(@RequestBody Usuario usuario){
+        if (usuarioService.findByDocumentoUsuario(usuario.getDocumentoUsuario()) == null){
+            return new ResponseEntity<Message>(new  Message(401, "No puedes registrarte"),HttpStatus.UNAUTHORIZED);            
+        }
+        Message message = usuarioService.update(usuario);
+        return new ResponseEntity<Message>(new Message(message.getStatus(), message.getMessage()),HttpStatus.valueOf(message.getStatus()));
     }
 }

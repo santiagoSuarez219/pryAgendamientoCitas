@@ -40,4 +40,12 @@ public class Cita {
     @ManyToOne
     @JoinColumn(name = "medico")
     private Usuario medico;
+
+    public Cita(Boolean estadoCita, LocalDate fechaCita, LocalTime horaCita, Usuario medico) {
+        this.estadoCita = estadoCita;
+        this.fechaCita = fechaCita;
+        this.horaCita = horaCita;
+        this.medico = medico;
+    }
+
 }

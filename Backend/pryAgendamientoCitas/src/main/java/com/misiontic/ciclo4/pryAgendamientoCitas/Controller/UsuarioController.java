@@ -36,9 +36,18 @@ public class UsuarioController {
 
     ConvertEntity convertEntity = new ConvertEntity();
 
+    //El administrador es el unico que puede crear usuarios en el sistema
     @PostMapping("/create")
-	public ResponseEntity<?> create(@RequestBody CrearUsuarioDto usuario){
-		Set<String> strRoles = usuario.getRoles();
+	public ResponseEntity<?> create(@RequestBody CrearUsuarioDto usuario, @RequestHeader String user, @RequestHeader String key){
+        if (!usuarioService.validarCredenciales(user, key)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        System.out.println(usuarioService.validarUsuarioAdmin(user, key));
+        if (usuarioService.validarUsuarioAdmin(user, key) == false) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        Set<String> strRoles = usuario.getRoles();
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {

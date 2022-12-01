@@ -45,4 +45,13 @@ public class Usuario {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "usuarios_roles", joinColumns = @JoinColumn(name = "usuario_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles =  new HashSet<>();
+
+    @Override
+    public String toString() {
+        return "Usuario [idUsuario=" + idUsuario + ", nombreUsuario=" + nombreUsuario + ", apellidoUsuario="
+                + apellidoUsuario + ", documentoUsuario=" + documentoUsuario + ", userName=" + userName + ", password="
+                + password + ", roles=" + roles + "]";
+    }
+
+    
 }

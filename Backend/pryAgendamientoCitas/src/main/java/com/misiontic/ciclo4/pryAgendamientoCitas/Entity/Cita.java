@@ -28,7 +28,7 @@ public class Cita {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    private String idUsuario;
+    private String idCita;
     private Boolean estadoCita;
     private LocalDate fechaCita;
     private LocalTime horaCita;

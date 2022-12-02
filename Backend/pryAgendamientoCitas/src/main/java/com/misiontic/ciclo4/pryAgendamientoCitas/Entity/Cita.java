@@ -48,4 +48,12 @@ public class Cita {
         this.medico = medico;
     }
 
+    @Override
+    public String toString() {
+        return "Cita [idCita=" + idCita + ", estadoCita=" + estadoCita + ", fechaCita=" + fechaCita + ", horaCita="
+                + horaCita + ", paciente=" + paciente + ", medico=" + medico + "]";
+    }
+
+    
+
 }

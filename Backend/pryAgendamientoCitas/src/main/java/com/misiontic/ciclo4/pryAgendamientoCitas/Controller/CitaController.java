@@ -2,10 +2,12 @@ package com.misiontic.ciclo4.pryAgendamientoCitas.Controller;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,4 +30,9 @@ public class CitaController {
 		cita.setHoraCita(LocalTime.of(8, 0));
 		return ResponseEntity.status(HttpStatus.CREATED).body(citaService.createAgenda(cita));
 	}
+
+    // @GetMapping("/prueba")
+    // public List<Cita> validarCita(@RequestBody Cita cita){
+    //     return citaService.validarCita(cita);
+    // }
 }

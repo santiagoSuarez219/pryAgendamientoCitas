@@ -1,11 +1,14 @@
 package com.misiontic.ciclo4.pryAgendamientoCitas.Controller;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +26,7 @@ import com.misiontic.ciclo4.pryAgendamientoCitas.Service.UsuarioService;
 import com.misiontic.ciclo4.pryAgendamientoCitas.Utility.ConvertEntity;
 import com.misiontic.ciclo4.pryAgendamientoCitas.Utility.ERol;
 import com.misiontic.ciclo4.pryAgendamientoCitas.Utility.Message;
+
 
 @RestController
 @RequestMapping("/api/usuario/")
@@ -42,7 +46,6 @@ public class UsuarioController {
         if (!usuarioService.validarCredenciales(user, key)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        System.out.println(usuarioService.validarUsuarioAdmin(user, key));
         if (usuarioService.validarUsuarioAdmin(user, key) == false) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -90,10 +93,18 @@ public class UsuarioController {
     //Registrar Usuario
     @PutMapping("/registro_usuario")
     public ResponseEntity<Message> RegistrarUsuario(@RequestBody Usuario usuario){
-        if (usuarioService.findByDocumentoUsuario(usuario.getDocumentoUsuario()) == null){
+        Usuario usuarioAux = usuarioService.findByDocumentoUsuario(usuario.getDocumentoUsuario());
+        if (usuarioAux == null){
             return new ResponseEntity<Message>(new  Message(401, "No puedes registrarte"),HttpStatus.UNAUTHORIZED);            
         }
+        usuario.setIdUsuario(usuarioAux.getIdUsuario());
+        usuario.setRoles(usuarioAux.getRoles());
         Message message = usuarioService.update(usuario);
         return new ResponseEntity<Message>(new Message(message.getStatus(), message.getMessage()),HttpStatus.valueOf(message.getStatus()));
+    }
+
+    @GetMapping("/listar")
+    public List<Usuario> findAll(){
+        return usuarioService.findAll();
     }
 }

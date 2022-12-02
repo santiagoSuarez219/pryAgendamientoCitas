@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.misiontic.ciclo4.pryAgendamientoCitas.Repository.CitaRepository;
+import com.misiontic.ciclo4.pryAgendamientoCitas.Repository.UsuarioRepository;
 import com.misiontic.ciclo4.pryAgendamientoCitas.Utility.Message;
 import com.misiontic.ciclo4.pryAgendamientoCitas.Entity.Cita;
 
@@ -20,6 +21,9 @@ public class CitaService {
     
     @Autowired
     CitaRepository citaRepository;
+
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
     public List<Cita> createAgenda(Cita cita) {
         if(validarCita(cita).size() == 0){
@@ -50,6 +54,10 @@ public class CitaService {
         }
         return citasFiltradas;
     }
+
+    // public Boolean validarMedico(Cita cita){
+
+    // }
 
     public List<Cita> findByFechaCitaMedico(){
         return citaRepository.findByFechaCitaMedico(LocalDate.of(2022, 12, 01), "8634574d-051a-4e25-a311-3f477adce709");

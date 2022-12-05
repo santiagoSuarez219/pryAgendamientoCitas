@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.misiontic.ciclo4.pryAgendamientoCitas.Repository.CitaRepository;
 import com.misiontic.ciclo4.pryAgendamientoCitas.Repository.UsuarioRepository;
+import com.misiontic.ciclo4.pryAgendamientoCitas.Utility.ERol;
 import com.misiontic.ciclo4.pryAgendamientoCitas.Utility.Message;
 import com.misiontic.ciclo4.pryAgendamientoCitas.Entity.Cita;
 
@@ -25,7 +26,11 @@ public class CitaService {
     @Autowired
     UsuarioRepository usuarioRepository;
 
-    public List<Cita> createAgenda(Cita cita) {
+    public ResponseEntity<Message> createAgenda(Cita cita) {
+        if(validarMedico(cita)){
+            return new ResponseEntity<Message>(new  Message(404, "El medico no existe en el sistema"),HttpStatus.NOT_FOUND); 
+        }
+
         if(validarCita(cita).size() == 0){
             citaRepository.save(cita);
         }
@@ -43,8 +48,8 @@ public class CitaService {
 			auxHora = cita.getHoraCita();
 		}
 		Citas.add(new Cita(cita.getEstadoCita(),auxFecha.plusDays(-1),Citas.get(Citas.size() - 1).getHoraCita().plusHours(1),cita.getMedico()));
-        return (List<Cita>) citaRepository.saveAll(Citas.stream().filter(Cita -> validarCita(Cita).size() == 0).collect(Collectors.toList())); 
-        // return new ResponseEntity<Message>(new  Message(200, "Agenda Creada de forma exitosa"),HttpStatus.OK);            
+        citaRepository.saveAll(Citas.stream().filter(Cita -> validarCita(Cita).size() == 0).collect(Collectors.toList())); 
+        return new ResponseEntity<Message>(new  Message(200, "Agenda Creada de forma exitosa"),HttpStatus.OK);            
 	}
 
     public List<Cita> validarCita(Cita cita){
@@ -55,9 +60,9 @@ public class CitaService {
         return citasFiltradas;
     }
 
-    // public Boolean validarMedico(Cita cita){
-
-    // }
+    public Boolean validarMedico(Cita cita){
+        return usuarioRepository.findByIdUsuario(cita.getMedico().getIdUsuario()).get().getRoles().stream().filter(rol -> rol.getNombreRol().equals(ERol.MEDICO)).collect(Collectors.toList()).size() == 0;
+    }
 
     public List<Cita> findByFechaCitaMedico(){
         return citaRepository.findByFechaCitaMedico(LocalDate.of(2022, 12, 01), "8634574d-051a-4e25-a311-3f477adce709");

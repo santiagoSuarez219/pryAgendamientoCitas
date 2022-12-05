@@ -27,28 +27,28 @@ public class DatosIniciales implements CommandLineRunner{
 
     @Override
     public void run(String... args) throws Exception {
-        // if (roleService.findAll().size() == 0) {
-        //     Role rolAdmin = new Role(ERol.ADMIN);
-        //     Role rolUser = new Role(ERol.USUARIO);
-        //     Role rolMedico = new Role(ERol.MEDICO);
-        //     Role rolPaciente = new Role(ERol.PACIENTE);
-        //     roleService.save(rolAdmin);
-        //     roleService.save(rolUser);
-        //     roleService.save(rolMedico);
-        //     roleService.save(rolPaciente);
-        // } 
-        // if (usuarioService.findAll().size() == 0) {
-        //     Role userRole = roleRepository.findByNombreRol(ERol.ADMIN).get();
-        //     Set<Role> roles = new HashSet<>();
-        //     roles.add(userRole);
-        //     Usuario usuario = new Usuario();
-        //     usuario.setNombreUsuario("admin");
-        //     usuario.setApellidoUsuario("admin");
-        //     usuario.setDocumentoUsuario((long) 1111111);
-        //     usuario.setUserName("admin");
-        //     usuario.setPassword(Hash.sha1("123456"));
-        //     usuario.setRoles(roles);
-        //     usuarioService.guardarUsuario(usuario);
-        // }
+        if (roleService.findAll().size() == 0) {
+            Role rolAdmin = new Role(ERol.ADMIN);
+            Role rolUser = new Role(ERol.USUARIO);
+            Role rolMedico = new Role(ERol.MEDICO);
+            Role rolPaciente = new Role(ERol.PACIENTE);
+            roleService.save(rolAdmin);
+            roleService.save(rolUser);
+            roleService.save(rolMedico);
+            roleService.save(rolPaciente);
+        } 
+        if (usuarioService.findAll().size() == 0) {
+            Role userRole = roleRepository.findByNombreRol(ERol.ADMIN).get();
+            Set<Role> roles = new HashSet<>();
+            roles.add(userRole);
+            Usuario usuario = new Usuario();
+            usuario.setNombreUsuario("admin");
+            usuario.setApellidoUsuario("admin");
+            usuario.setDocumentoUsuario((long) 1111111);
+            usuario.setUserName("admin");
+            usuario.setPassword(Hash.sha1("123456"));
+            usuario.setRoles(roles);
+            usuarioService.guardarUsuario(usuario);
+        }
     }
 }

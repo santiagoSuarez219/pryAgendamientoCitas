@@ -33,12 +33,12 @@ public class UsuarioService {
         return usuarioRepository.findByDocumentoUsuario(documentoUsuario);
     }
 
-    public boolean validarUsuarioAdmin(String user, String key) {
+    public boolean validarUsuario(String user, String key, String tipoUsuario) {
         Usuario usuario = usuarioRepository.findByUserName(user);
         try {
             int cantidad = 0;
             for (Role role : usuario.getRoles()) {
-                if (role.getNombreRol().toString().equals("ADMIN")) {
+                if (role.getNombreRol().toString().equals(tipoUsuario)) {
                     cantidad++;
                 }
             }

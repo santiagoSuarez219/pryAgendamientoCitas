@@ -42,7 +42,7 @@ public class CitaController {
         if (!usuarioService.validarCredenciales(user, key)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        if (usuarioService.validarUsuarioAdmin(user, key) == false) {
+        if (usuarioService.validarUsuario(user, key,"ADMIN") == false) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         cita.setFechaCita(LocalDate.of(año, mes, dia));
@@ -50,24 +50,35 @@ public class CitaController {
         return citaService.createAgenda(cita);
 	}
 
-    @GetMapping("/prueba")
-    public Boolean validarMedico(@RequestBody Cita cita){
-        return citaService.validarMedico(cita);
-    }
-
     //Consultar agenda disponible
+    // @GetMapping("/citas_disponibles")
+	// public List<CitasDisponiblesDto> readCitasDisponibles(@RequestBody Cita cita){
+    //     List<Cita> citas = citaService.getCitasDisponibles(cita.getFechaCita());
+    //     List<CitasDisponiblesDto> citasDisponibles = new ArrayList<>();
+    //     citas.stream().forEach(citaDisponible -> {
+    //         citasDisponibles.add(new CitasDisponiblesDto(citaDisponible.getIdCita(),citaDisponible.getFechaCita(), citaDisponible.getHoraCita(), citaDisponible.getMedico()));
+    //     });
+    //     return citasDisponibles;
+	// }
+
     @GetMapping("/citas_disponibles")
-	public List<CitasDisponiblesDto> readCitasDisponibles(@RequestBody Cita cita){
+	public ResponseEntity<?> readCitasDisponibles(@RequestBody Cita cita,@RequestHeader String user, @RequestHeader String key){
+        if (!usuarioService.validarCredenciales(user, key) || !usuarioService.validarUsuario(user, key, "PACIENTE")) {
+            return new ResponseEntity<Message>(new Message(401, "Debe iniciar sesion como paciente"),HttpStatus.UNAUTHORIZED);
+        }
         List<Cita> citas = citaService.getCitasDisponibles(cita.getFechaCita());
         List<CitasDisponiblesDto> citasDisponibles = new ArrayList<>();
         citas.stream().forEach(citaDisponible -> {
             citasDisponibles.add(new CitasDisponiblesDto(citaDisponible.getIdCita(),citaDisponible.getFechaCita(), citaDisponible.getHoraCita(), citaDisponible.getMedico()));
         });
-        return citasDisponibles;
+        return ResponseEntity.status(HttpStatus.OK).body(citasDisponibles);
 	}
 
     @PutMapping("/estado_cita")
-    public ResponseEntity<Message> toggleEstadoCita(@RequestBody Cita cita){
+    public ResponseEntity<Message> toggleEstadoCita(@RequestBody Cita cita,@RequestHeader String user, @RequestHeader String key){
+        if (!usuarioService.validarCredenciales(user, key) || !usuarioService.validarUsuario(user, key, "PACIENTE")) {
+            return new ResponseEntity<Message>(new Message(401, "Debe iniciar sesion como paciente"),HttpStatus.UNAUTHORIZED);
+        }
         Optional<Cita> citaAgendar = citaService.findById(cita.getIdCita());
         if (citaAgendar.isPresent()) {
             citaAgendar.get().setEstadoCita(!citaAgendar.get().getEstadoCita());
@@ -77,4 +88,17 @@ public class CitaController {
         }
         return new ResponseEntity<Message>(new  Message(400, "La cita no existe"),HttpStatus.BAD_REQUEST);            
     }
+    @GetMapping("/citas")
+	public ResponseEntity<?> readCitas(@RequestBody Cita cita,@RequestHeader String user, @RequestHeader String key){
+        if (!usuarioService.validarCredenciales(user, key) || !usuarioService.validarUsuario(user, key, "ADMIN")) {
+            return new ResponseEntity<Message>(new Message(401, "Debe iniciar sesion como administrador"),HttpStatus.UNAUTHORIZED);
+        }
+        List<Cita> citas = citaService.getCitas(cita.getFechaCita());
+        return ResponseEntity.status(HttpStatus.OK).body(citas);
+	}
+
+    // @GetMapping("/prueba")
+    // public Boolean validarUsuario(@RequestHeader String user, @RequestHeader String key){
+    //     return !usuarioService.validarUsuario(user, key, "MEDICO");
+    // }
 }

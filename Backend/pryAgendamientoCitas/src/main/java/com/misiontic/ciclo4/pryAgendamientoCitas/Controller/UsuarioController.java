@@ -45,7 +45,7 @@ public class UsuarioController {
     //El administrador es el unico que puede crear usuarios en el sistema
     @PostMapping("/create")
 	public ResponseEntity<Message> create(@Valid @RequestBody CrearUsuarioDto usuario, @RequestHeader String user, @RequestHeader String key){
-        if (!usuarioService.validarCredenciales(user, key) && !usuarioService.validarUsuarioAdmin(user, key)) {
+        if (!usuarioService.validarCredenciales(user, key) || !usuarioService.validarUsuario(user, key, "ADMIN")) {
             return new ResponseEntity<Message>(new  Message(401, "Debe iniciar sesion como administrador"),HttpStatus.UNAUTHORIZED);
         }
         if (usuarioService.findByDocumentoUsuario(usuario.getDocumentoUsuario()) != null){

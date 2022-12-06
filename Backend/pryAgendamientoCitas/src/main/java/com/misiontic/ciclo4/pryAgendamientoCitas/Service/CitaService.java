@@ -73,6 +73,10 @@ public class CitaService {
 		return citaRepository.findByCitasDisponibles(fechaCita);
 	}
 
+    public List<Cita> getCitas(LocalDate fechaCita){
+        return citaRepository.findByFechaCita(fechaCita);
+    }
+
     public Optional<Cita> findById(String id){
         return citaRepository.findById(id);
     }

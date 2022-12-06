@@ -16,4 +16,9 @@ public interface CitaRepository extends CrudRepository<Cita, String> {
     
     @Query(value = "Select * from citas where medico =:medico and fecha_cita =:fechaCita", nativeQuery = true)
     public List<Cita> findByFechaCitaMedico(@Param("fechaCita") LocalDate fechaCita, @Param("medico") String medico);
+
+    //Consultar Agenda Paciente
+    @Query(value = "Select * from citas where paciente is null and fecha_cita =:fechaCita and estado_cita = false", nativeQuery = true)
+	List<Cita> findByCitasDisponibles(@Param("fechaCita") LocalDate fechaCita);
+
 }

@@ -23,5 +23,4 @@ public interface UsuarioRepository extends CrudRepository<Usuario,String> {
     public Usuario findByDocumentoUsuario(Long documentoUsuario);
     public Optional<Usuario> findByIdUsuario(String idUsuario);
     public Usuario findByUserName(String user);
-
 }

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,5 +67,17 @@ public class CitaService {
 
     public List<Cita> findByFechaCitaMedico(){
         return citaRepository.findByFechaCitaMedico(LocalDate.of(2022, 12, 01), "8634574d-051a-4e25-a311-3f477adce709");
+    }
+
+    public List<Cita> getCitasDisponibles(LocalDate fechaCita) {
+		return citaRepository.findByCitasDisponibles(fechaCita);
+	}
+
+    public Optional<Cita> findById(String id){
+        return citaRepository.findById(id);
+    }
+
+    public Cita update(Cita cita){
+        return citaRepository.save(cita);
     }
 }

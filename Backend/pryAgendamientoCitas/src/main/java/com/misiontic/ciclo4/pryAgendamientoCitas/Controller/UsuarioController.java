@@ -2,6 +2,7 @@ package com.misiontic.ciclo4.pryAgendamientoCitas.Controller;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -9,7 +10,9 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +35,7 @@ import com.misiontic.ciclo4.pryAgendamientoCitas.Utility.Message;
 
 @RestController
 @RequestMapping("/api/usuario/")
+@CrossOrigin(origins = "*")
 public class UsuarioController {
     
     @Autowired
@@ -86,8 +90,8 @@ public class UsuarioController {
     public ResponseEntity<Object> login(@RequestHeader String user, @RequestHeader String pwd){
         Usuario usuario = usuarioService.login(user, Hash.sha1(pwd));
         if (usuario != null){
-            return new ResponseEntity<>(new CredencialesDto(usuario.getUserName(),
-            Hash.sha1(Hash.sha1(pwd) + Hash.sha1(usuario.getUserName()))),HttpStatus.OK);
+            System.out.println(usuario.getRoles());
+            return new ResponseEntity<>(new CredencialesDto(usuario.getIdUsuario(),usuario.getUserName(),Hash.sha1(Hash.sha1(pwd) + Hash.sha1(usuario.getUserName())),usuario.getRoles()),HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new Message(401, "Error de credenciales"), HttpStatus.UNAUTHORIZED);
         }
@@ -112,4 +116,30 @@ public class UsuarioController {
         return usuarioService.findAll();
     }
 
+    @GetMapping("/listar_pacientes")
+    public List<Usuario> findByRolePaciente(){
+        return usuarioService.findByRol(roleService.findByNombreRol(ERol.PACIENTE).get());
+    }
+
+    @GetMapping("/listar_medicos")
+    public List<Usuario> findByRoleMedico(){
+        return usuarioService.findByRol(roleService.findByNombreRol(ERol.MEDICO).get());
+    }
+
+    @GetMapping("buscar_usuario/{id}")
+    public Optional<Usuario> findById(@PathVariable String id) {
+        return usuarioService.findByIdUsuario(id);
+    }
+
+    @PutMapping("/editar_usuario")
+    public ResponseEntity<Message> EditarUsuario(@Valid @RequestBody Usuario usuario){
+        Usuario usuarioAux = usuarioService.findByIdUsuario(usuario.getIdUsuario()).get();
+        usuarioAux.setPassword(Hash.sha1(usuario.getPassword()));
+        usuarioAux.setNombreUsuario(usuario.getNombreUsuario());
+        usuarioAux.setApellidoUsuario(usuario.getApellidoUsuario());
+        usuarioAux.setDocumentoUsuario(usuario.getDocumentoUsuario());
+        usuarioAux.setUserName(usuario.getUserName());
+        usuarioService.guardarUsuario(usuarioAux);
+        return new ResponseEntity<Message>(new  Message(200, "Usuario actualizado con exito"),HttpStatus.OK);
+    }
 }

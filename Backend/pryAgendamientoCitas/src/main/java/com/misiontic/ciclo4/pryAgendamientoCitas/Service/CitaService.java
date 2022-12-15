@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,7 @@ import com.misiontic.ciclo4.pryAgendamientoCitas.Repository.UsuarioRepository;
 import com.misiontic.ciclo4.pryAgendamientoCitas.Utility.ERol;
 import com.misiontic.ciclo4.pryAgendamientoCitas.Utility.Message;
 import com.misiontic.ciclo4.pryAgendamientoCitas.Entity.Cita;
+import com.misiontic.ciclo4.pryAgendamientoCitas.Entity.Usuario;
 
 @Service
 public class CitaService {
@@ -84,4 +86,20 @@ public class CitaService {
     public Cita update(Cita cita){
         return citaRepository.save(cita);
     }
+
+    public List<Cita> findByPaciente(Usuario paciente){
+        List<Cita> citas = (List<Cita>) citaRepository.findAll();
+        citas = citas.stream().filter(cita -> !Objects.isNull(cita.getPaciente())).collect(Collectors.toList());
+        return citas.stream().filter(cita -> cita.getPaciente().equals(paciente)).collect(Collectors.toList());
+    }
+
+    public List<Cita> findByMedico(Usuario medico){
+        List<Cita> citas = (List<Cita>) citaRepository.findAll();
+        return citas.stream().filter(cita -> cita.getMedico().equals(medico)).collect(Collectors.toList());
+    }
+
+    public void deleteById(String id){
+        citaRepository.deleteById(id);
+    } 
 }
+ 

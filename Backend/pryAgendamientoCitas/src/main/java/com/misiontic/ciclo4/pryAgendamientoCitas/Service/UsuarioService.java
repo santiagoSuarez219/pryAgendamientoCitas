@@ -2,6 +2,7 @@ package com.misiontic.ciclo4.pryAgendamientoCitas.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,11 @@ public class UsuarioService {
 
     public List<Usuario> findAll(){
         return (List<Usuario>) usuarioRepository.findAll();
+    }
+
+    public List<Usuario> findByRol(Role role){
+        List<Usuario> usuarios = (List<Usuario>) usuarioRepository.findAll();
+        return usuarios.stream().filter(usuario -> usuario.getRoles().contains(role)).collect(Collectors.toList());
     }
 
     public Usuario login(String user, String pwd){
